@@ -7,7 +7,7 @@ if (-not $JsonFile) {
     exit
 }
 
-$Data = Get-Content -Path $JsonFile.FullName -Raw | ConvertFrom-Json
+$Data = Get-Content -Path $JsonFile.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
 
 $Messages = foreach ($Message in $Data.messages) {
     $Timestamp = [DateTimeOffset]::FromUnixTimeMilliseconds($Message.timestamp_ms).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
@@ -38,5 +38,3 @@ $Messages = foreach ($Message in $Data.messages) {
 $OutputCsvPath = Join-Path -Path $CurrentDir -ChildPath 'output.csv'
 
 $Messages | Export-Csv -Path $OutputCsvPath -NoTypeInformation -Encoding UTF8
-
-Write-Host "Conversion complete! The CSV file 'output.csv' has been created in the current directory."
